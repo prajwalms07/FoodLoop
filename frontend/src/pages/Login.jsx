@@ -44,7 +44,7 @@ export default function Login() {
         email: formData.email.trim(),
         password: formData.password,
       });
-      navigate("/", { replace: true });
+      navigate("/dashboard", { replace: true });
     } catch (requestError) {
       setError(
         getAuthErrorMessage(requestError, "Sign in failed. Please try again."),

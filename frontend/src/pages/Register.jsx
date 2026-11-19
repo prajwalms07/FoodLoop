@@ -171,7 +171,7 @@ export default function Register() {
             {formData.role === "ngo" && (
               <div>
                 <label htmlFor="register-capacity" className="mb-2 block text-sm font-semibold">
-                  Pickup capacity (optional)
+                  Pickup capacity in kg (optional)
                 </label>
                 <input
                   id="register-capacity"
@@ -182,7 +182,7 @@ export default function Register() {
                   min="0"
                   step="1"
                   inputMode="numeric"
-                  placeholder="Maximum food units you can collect"
+                  placeholder="Maximum kilograms you can collect"
                   className="w-full rounded-xl border border-gray-200 px-4 py-4 outline-none transition focus:border-green-600 focus:ring-4 focus:ring-green-100"
                 />
               </div>

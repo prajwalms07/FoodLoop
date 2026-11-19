@@ -2,6 +2,7 @@ from flask import Flask, jsonify
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import inspect
 
 from app.config import Config
 
@@ -18,11 +19,11 @@ def create_app(config_class=Config):
     CORS(app, resources={r"/api/*": {"origins": app.config["CORS_ORIGINS"]}})
 
     from app import models  # noqa: F401  (register models)
-    from app.routes import auth, foods, users
+    from app.routes import auth, foods, reservations, users
     from app.utils.errors import register_error_handlers
     from app.utils.seed import seed_database
 
-    for module in (auth, users, foods):
+    for module in (auth, users, foods, reservations):
         app.register_blueprint(module.bp)
     register_error_handlers(app, jwt)
 
@@ -42,5 +43,11 @@ def create_app(config_class=Config):
 
     with app.app_context():
         db.create_all()
+        columns = {column["name"] for column in inspect(db.engine).get_columns("food_listings")}
+        if "image_filename" not in columns:
+            with db.engine.begin() as connection:
+                connection.exec_driver_sql(
+                    "ALTER TABLE food_listings ADD COLUMN image_filename VARCHAR(255)"
+                )
 
     return app

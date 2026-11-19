@@ -73,6 +73,12 @@ function App() {
                 <span className="text-sm text-gray-600">
                   {user.name} · {roleLabel}
                 </span>
+                <Link
+                  to="/dashboard"
+                  className="rounded-lg bg-[#176B46] px-4 py-2.5 text-sm font-semibold text-white hover:bg-green-800"
+                >
+                  Dashboard
+                </Link>
                 <button
                   type="button"
                   onClick={logout}
@@ -90,7 +96,7 @@ function App() {
                   Log in
                 </Link>
                 <Link
-                  to="/register"
+                  to={user ? "/dashboard" : "/register"}
                   className="rounded-lg bg-[#176B46] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-green-800"
                 >
                   Get started <ArrowRight className="ml-1 inline" size={16} />
@@ -119,6 +125,13 @@ function App() {
                 <p className="text-sm text-gray-600">
                   {user.name} · {roleLabel}
                 </p>
+                <Link
+                  to="/dashboard"
+                  onClick={() => setMenuOpen(false)}
+                  className="rounded-lg bg-[#176B46] px-5 py-3 text-center font-semibold text-white"
+                >
+                  Dashboard
+                </Link>
                 <button
                   type="button"
                   onClick={() => {
@@ -140,7 +153,7 @@ function App() {
                   Log in
                 </Link>
                 <Link
-                  to="/register"
+                  to={user ? "/dashboard" : "/register"}
                   onClick={() => setMenuOpen(false)}
                   className="rounded-lg bg-[#176B46] px-5 py-3 text-center font-semibold text-white"
                 >
@@ -184,7 +197,7 @@ function App() {
               to="/register"
               className="rounded-xl bg-[#176B46] px-7 py-4 font-semibold text-white shadow-lg shadow-green-900/15 transition hover:-translate-y-1 hover:bg-green-800"
             >
-              Start making an impact <ArrowRight className="ml-2 inline" size={18} />
+              {user ? "Open your dashboard" : "Start making an impact"} <ArrowRight className="ml-2 inline" size={18} />
             </Link>
             <a
               href="#how-it-works"
@@ -316,10 +329,10 @@ function App() {
             there's a place for you in FoodLoop.
           </p>
           <Link
-            to="/register"
+            to={user ? "/dashboard" : "/register"}
             className="relative mt-8 inline-block rounded-xl bg-white px-7 py-4 font-bold text-green-900 transition hover:bg-green-50"
           >
-            Join FoodLoop <ArrowRight className="ml-2 inline" size={18} />
+            {user ? "Open your dashboard" : "Join FoodLoop"} <ArrowRight className="ml-2 inline" size={18} />
           </Link>
         </div>
       </section>

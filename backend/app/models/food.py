@@ -17,10 +17,12 @@ class FoodListing(db.Model):
     pickup_location = db.Column(db.String(255), nullable=False)
     latitude = db.Column(db.Float)
     longitude = db.Column(db.Float)
+    image_filename = db.Column(db.String(255))
     status = db.Column(db.String(20), nullable=False, default="available", index=True)
     created_at = db.Column(db.DateTime, nullable=False, default=utc_now)
 
     provider = db.relationship("User", back_populates="listings")
+    reservations = db.relationship("Reservation", back_populates="food", cascade="all, delete-orphan")
 
     @property
     def is_expired(self):
@@ -33,5 +35,6 @@ class FoodListing(db.Model):
             "available_quantity": self.available_quantity,
             "expiry_time": to_iso(self.expiry_time), "pickup_location": self.pickup_location,
             "latitude": self.latitude, "longitude": self.longitude,
+            "image_url": f"/api/foods/{self.id}/image" if self.image_filename else None,
             "status": self.status, "created_at": to_iso(self.created_at),
         }

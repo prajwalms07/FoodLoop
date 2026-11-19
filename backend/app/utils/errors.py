@@ -25,6 +25,10 @@ def register_error_handlers(app, jwt):
     def method_not_allowed(_):
         return jsonify(error="Method not allowed"), 405
 
+    @app.errorhandler(413)
+    def request_too_large(_):
+        return jsonify(error="Request is too large"), 413
+
     @app.errorhandler(500)
     def server_error(_):
         return jsonify(error="Internal server error"), 500

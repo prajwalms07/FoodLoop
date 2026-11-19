@@ -1,4 +1,5 @@
 from datetime import timedelta
+from io import BytesIO
 
 import pytest
 
@@ -19,6 +20,49 @@ def test_provider_creates_listing(client, provider, food_payload):
     assert res.status_code == 201
     food = res.get_json()["food"]
     assert food["available_quantity"] == 10 and food["status"] == "available"
+    assert food["image_url"] is None
+
+
+def test_provider_uploads_image_for_ngo_listing(client, provider, ngo, food_payload, app, tmp_path):
+    app.config["UPLOAD_FOLDER"] = str(tmp_path)
+    image_bytes = b"\x89PNG\r\n\x1a\n" + b"\x00" * 4
+    response = client.post(
+        "/api/foods",
+        headers=provider,
+        data={
+            **food_payload,
+            "quantity": str(food_payload["quantity"]),
+            "image": (BytesIO(image_bytes), "rice.png"),
+        },
+    )
+
+    assert response.status_code == 201
+    food = response.get_json()["food"]
+    assert food["image_url"] == f"/api/foods/{food['id']}/image"
+    visible_food = client.get("/api/foods", headers=ngo).get_json()["foods"][0]
+    assert visible_food["image_url"] == food["image_url"]
+
+    image_response = client.get(food["image_url"])
+    assert image_response.status_code == 200
+    assert image_response.mimetype == "image/png"
+    assert image_response.data == image_bytes
+    assert image_response.headers["X-Content-Type-Options"] == "nosniff"
+
+
+def test_provider_cannot_upload_non_image_content(client, provider, food_payload, app, tmp_path):
+    app.config["UPLOAD_FOLDER"] = str(tmp_path)
+    response = client.post(
+        "/api/foods",
+        headers=provider,
+        data={
+            **food_payload,
+            "quantity": str(food_payload["quantity"]),
+            "image": (BytesIO(b"not an image"), "fake.png"),
+        },
+    )
+
+    assert response.status_code == 400
+    assert response.get_json()["details"]["image"] == "invalid image content"
 
 
 def test_ngo_cannot_create(client, ngo, food_payload):

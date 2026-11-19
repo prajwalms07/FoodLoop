@@ -5,4 +5,5 @@ __pycache__/
 *.pyc
 *.db
 instance/
+uploads/
 .pytest_cache/
