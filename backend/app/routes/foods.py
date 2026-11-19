@@ -1,7 +1,10 @@
-from flask import Blueprint, g, jsonify, request
+from flask import Blueprint, current_app, g, jsonify, request, send_from_directory
 
+from app import db
+from app.models.food import FoodListing
 from app.services import food_service as svc
 from app.utils.decorators import login_required, roles_required
+from app.utils.errors import APIError
 
 bp = Blueprint("foods", __name__, url_prefix="/api/foods")
 
@@ -16,8 +19,34 @@ def list_foods():
 @bp.post("")
 @roles_required("provider")
 def create_food():
-    listing = svc.create_listing(g.current_user, request.get_json(silent=True))
+    if request.mimetype == "multipart/form-data":
+        data = request.form.to_dict()
+        if "quantity" in data:
+            try:
+                data["quantity"] = int(data["quantity"])
+            except ValueError:
+                pass
+        image_file = request.files.get("image")
+    else:
+        data = request.get_json(silent=True)
+        image_file = None
+    listing = svc.create_listing(g.current_user, data, image_file)
     return jsonify(message="Food listing created", food=listing.to_dict()), 201
+
+
+@bp.get("/<int:food_id>/image")
+def get_food_image(food_id):
+    listing = db.session.get(FoodListing, food_id)
+    if not listing or not listing.image_filename:
+        raise APIError("Food image not found", 404)
+
+    response = send_from_directory(
+        current_app.config["UPLOAD_FOLDER"],
+        listing.image_filename,
+        conditional=True,
+    )
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    return response
 
 
 @bp.get("/<int:food_id>")

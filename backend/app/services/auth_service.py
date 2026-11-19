@@ -48,7 +48,7 @@ def register_user(data):
     capacity = data.get("capacity")
     if capacity is not None:
         if isinstance(capacity, bool) or not isinstance(capacity, int) or capacity < 0:
-            errors["capacity"] = "must be a non-negative integer"
+            errors["capacity"] = "must be a non-negative whole number of kilograms"
     if errors:
         raise APIError("Validation failed", 400, errors)
 

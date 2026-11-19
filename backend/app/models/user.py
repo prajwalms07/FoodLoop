@@ -14,10 +14,13 @@ class User(db.Model):
     role = db.Column(db.String(20), nullable=False)
     latitude = db.Column(db.Float)
     longitude = db.Column(db.Float)
-    capacity = db.Column(db.Integer)  # NGO: how many units it can take
+    capacity = db.Column(db.Integer)  # NGO: maximum kilograms it can collect
     created_at = db.Column(db.DateTime, nullable=False, default=utc_now)
 
     listings = db.relationship("FoodListing", back_populates="provider", cascade="all, delete-orphan")
+    reservations = db.relationship(
+        "Reservation", back_populates="volunteer", cascade="all, delete-orphan"
+    )
 
     def to_dict(self):
         return {

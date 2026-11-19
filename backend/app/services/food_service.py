@@ -1,3 +1,8 @@
+import os
+from uuid import uuid4
+
+from flask import current_app
+
 from app import db
 from app.models.food import FoodListing
 from app.utils.errors import APIError
@@ -7,6 +12,12 @@ REQUIRED = ("food_name", "category", "quantity", "expiry_time", "pickup_location
 EDITABLE = ("food_name", "category", "quantity", "available_quantity", "expiry_time",
             "pickup_location", "latitude", "longitude", "status")
 MANUAL_STATUSES = ("available", "reserved", "completed")
+IMAGE_SIGNATURES = {
+    ".jpg": lambda header: header.startswith(b"\xff\xd8\xff"),
+    ".jpeg": lambda header: header.startswith(b"\xff\xd8\xff"),
+    ".png": lambda header: header.startswith(b"\x89PNG\r\n\x1a\n"),
+    ".webp": lambda header: len(header) >= 12 and header[:4] == b"RIFF" and header[8:12] == b"WEBP",
+}
 
 
 def refresh_expired():
@@ -60,7 +71,32 @@ def _validate(data, errors):
     return clean
 
 
-def create_listing(provider, data):
+def _save_food_image(image_file):
+    if not image_file or not image_file.filename:
+        return None
+
+    extension = os.path.splitext(image_file.filename)[1].lower()
+    signature_check = IMAGE_SIGNATURES.get(extension)
+    if signature_check is None:
+        raise APIError("Upload a JPG, PNG, or WebP image", 400, {"image": "unsupported format"})
+
+    image_file.stream.seek(0, os.SEEK_END)
+    image_size = image_file.stream.tell()
+    image_file.stream.seek(0)
+    if image_size > current_app.config["MAX_FOOD_IMAGE_SIZE"]:
+        raise APIError("Food image must be no larger than 5 MB", 413, {"image": "file is too large"})
+
+    if not signature_check(image_file.stream.read(12)):
+        raise APIError("The uploaded file is not a valid image", 400, {"image": "invalid image content"})
+    image_file.stream.seek(0)
+
+    filename = f"{uuid4().hex}{extension}"
+    os.makedirs(current_app.config["UPLOAD_FOLDER"], exist_ok=True)
+    image_file.save(os.path.join(current_app.config["UPLOAD_FOLDER"], filename))
+    return filename
+
+
+def create_listing(provider, data, image_file=None):
     data = data or {}
     errors = {f: "is required" for f in REQUIRED if f not in data or data[f] in (None, "")}
     clean = _validate({k: v for k, v in data.items() if k not in errors and k in EDITABLE}, errors)
@@ -76,7 +112,13 @@ def create_listing(provider, data):
     clean.setdefault("longitude", provider.longitude)
     clean.pop("status", None)
 
-    listing = FoodListing(provider_id=provider.id, status="available", **clean)
+    image_filename = _save_food_image(image_file)
+    listing = FoodListing(
+        provider_id=provider.id,
+        status="available",
+        image_filename=image_filename,
+        **clean,
+    )
     db.session.add(listing)
     db.session.commit()
     return listing
@@ -160,6 +202,6 @@ def assert_reservable(listing, quantity):
     if listing.status != "available":
         raise APIError(f"Listing is {listing.status}", 400)
     if isinstance(quantity, bool) or not isinstance(quantity, int) or quantity < 1:
-        raise APIError("Quantity must be a positive integer", 400)
+        raise APIError("Quantity must be a positive whole number of kilograms", 400)
     if quantity > listing.available_quantity:
-        raise APIError("Requested quantity exceeds available quantity", 400)
+        raise APIError("Requested kilograms exceed the available quantity", 400)
