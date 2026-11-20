@@ -49,47 +49,40 @@ function App() {
   return (
     <div className="min-h-screen bg-[#F8FAF5] text-[#202B24]">
       {/* Navigation */}
-      <nav
-        aria-label="Main navigation"
-        className="sticky top-0 z-50 border-b border-[#E5EEE7] bg-white/90 shadow-sm backdrop-blur-xl"
-      >
-        <div className="mx-auto flex min-h-[76px] max-w-7xl items-center justify-between gap-5 px-5 sm:px-6">
-          <a
-            href="#home"
-            className="group flex shrink-0 items-center gap-2.5 rounded-xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#176B46]"
-          >
-            <div className="rounded-xl bg-gradient-to-br from-[#218254] to-[#125637] p-2.5 text-white shadow-md shadow-green-900/20 transition duration-200 group-hover:-rotate-3 group-hover:scale-105">
+      <nav className="sticky top-0 z-50 border-b border-green-100 bg-white/95 backdrop-blur">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+          <a href="#" className="flex items-center gap-2">
+            <div className="rounded-xl bg-[#176B46] p-2 text-white">
               <Leaf size={23} />
             </div>
-            <span className="text-[1.4rem] font-extrabold tracking-tight text-[#202B24]">
+            <span className="text-2xl font-extrabold tracking-tight">
               Food<span className="text-[#36A66B]">Loop</span>
             </span>
           </a>
 
-          <div className="hidden items-center gap-1 rounded-full border border-[#E9F0EA] bg-[#F7FAF7] p-1 text-[13px] font-semibold text-[#526158] lg:flex">
-            <a href="#home" className="rounded-full px-4 py-2 transition-colors duration-200 hover:bg-white hover:text-[#176B46] hover:shadow-sm focus-visible:outline-2 focus-visible:outline-[#176B46]">Home</a>
-            <a href="#how-it-works" className="rounded-full px-4 py-2 transition-colors duration-200 hover:bg-white hover:text-[#176B46] hover:shadow-sm focus-visible:outline-2 focus-visible:outline-[#176B46]">How it works</a>
-            <a href="#features" className="rounded-full px-4 py-2 transition-colors duration-200 hover:bg-white hover:text-[#176B46] hover:shadow-sm focus-visible:outline-2 focus-visible:outline-[#176B46]">Features</a>
-            <a href="#impact" className="rounded-full px-4 py-2 transition-colors duration-200 hover:bg-white hover:text-[#176B46] hover:shadow-sm focus-visible:outline-2 focus-visible:outline-[#176B46]">Our impact</a>
+          <div className="hidden items-center gap-9 text-sm font-medium text-gray-600 md:flex">
+            <a href="#home" className="hover:text-green-700">Home</a>
+            <a href="#how-it-works" className="hover:text-green-700">How it works</a>
+            <a href="#features" className="hover:text-green-700">Features</a>
+            <a href="#impact" className="hover:text-green-700">Our impact</a>
           </div>
 
-          <div className="hidden items-center gap-2 md:flex">
+          <div className="hidden items-center gap-3 md:flex">
             {user ? (
               <>
-                <span className="mr-1 rounded-full border border-[#E9F0EA] bg-[#F7FAF7] px-3.5 py-2 text-right">
-                  <span className="block text-sm font-semibold leading-4 text-[#26372D]">{user.name}</span>
-                  <span className="mt-0.5 block text-[11px] font-medium text-[#748178]">{roleLabel}</span>
+                <span className="text-sm text-gray-600">
+                  {user.name} · {roleLabel}
                 </span>
                 <Link
                   to="/dashboard"
-                  className="rounded-full bg-[#176B46] px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-green-900/15 transition duration-200 hover:-translate-y-0.5 hover:bg-[#125637] hover:shadow-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#176B46]"
+                  className="rounded-lg bg-[#176B46] px-4 py-2.5 text-sm font-semibold text-white hover:bg-green-800"
                 >
                   Dashboard
                 </Link>
                 <button
                   type="button"
                   onClick={logout}
-                  className="rounded-full px-4 py-2.5 text-sm font-semibold text-[#526158] transition-colors duration-200 hover:bg-[#F0F6F1] hover:text-[#176B46] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#176B46]"
+                  className="rounded-lg px-4 py-2.5 text-sm font-semibold hover:bg-green-50"
                 >
                   Sign out
                 </button>
@@ -98,81 +91,76 @@ function App() {
               <>
                 <Link
                   to="/login"
-                  className="rounded-full px-4 py-2.5 text-sm font-semibold text-[#526158] transition-colors duration-200 hover:bg-[#F0F6F1] hover:text-[#176B46] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#176B46]"
+                  className="rounded-lg px-4 py-2.5 text-sm font-semibold hover:bg-green-50"
                 >
                   Log in
                 </Link>
                 <Link
                   to={user ? "/dashboard" : "/register"}
-                  className="group rounded-full bg-[#176B46] px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-green-900/15 transition duration-200 hover:-translate-y-0.5 hover:bg-[#125637] hover:shadow-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#176B46]"
+                  className="rounded-lg bg-[#176B46] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-green-800"
                 >
-                  Get started <ArrowRight className="ml-1 inline transition-transform duration-200 group-hover:translate-x-0.5" size={16} />
+                  Get started <ArrowRight className="ml-1 inline" size={16} />
                 </Link>
               </>
             )}
           </div>
 
           <button
-            type="button"
+            className="md:hidden"
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label="Toggle navigation"
-            aria-expanded={menuOpen}
-            aria-controls="mobile-navigation"
-            className="rounded-xl border border-[#E5EEE7] bg-white p-2.5 text-[#176B46] shadow-sm transition hover:bg-[#F0F6F1] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#176B46] md:hidden"
           >
-            {menuOpen ? <X size={21} /> : <Menu size={21} />}
+            {menuOpen ? <X /> : <Menu />}
           </button>
         </div>
 
         {menuOpen && (
-          <div id="mobile-navigation" className="border-t border-[#E9F0EA] bg-white px-5 py-4 shadow-lg shadow-green-950/5 md:hidden">
-            <div className="mx-auto flex max-w-7xl flex-col gap-1">
-              <a href="#home" onClick={() => setMenuOpen(false)} className="rounded-xl px-4 py-3 font-medium text-[#526158] transition-colors hover:bg-[#F0F6F1] hover:text-[#176B46]">Home</a>
-              <a href="#how-it-works" onClick={() => setMenuOpen(false)} className="rounded-xl px-4 py-3 font-medium text-[#526158] transition-colors hover:bg-[#F0F6F1] hover:text-[#176B46]">How it works</a>
-              <a href="#features" onClick={() => setMenuOpen(false)} className="rounded-xl px-4 py-3 font-medium text-[#526158] transition-colors hover:bg-[#F0F6F1] hover:text-[#176B46]">Features</a>
-              <a href="#impact" onClick={() => setMenuOpen(false)} className="rounded-xl px-4 py-3 font-medium text-[#526158] transition-colors hover:bg-[#F0F6F1] hover:text-[#176B46]">Our impact</a>
-              {user ? (
-                <>
-                  <p className="border-t border-[#E9F0EA] px-4 pb-1 pt-4 text-sm text-gray-600">
-                    {user.name} · {roleLabel}
-                  </p>
-                  <Link
-                    to="/dashboard"
-                    onClick={() => setMenuOpen(false)}
-                    className="mt-2 rounded-full bg-[#176B46] px-5 py-3 text-center font-semibold text-white shadow-md shadow-green-900/15 transition hover:bg-[#125637] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#176B46]"
-                  >
-                    Dashboard
-                  </Link>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      logout();
-                      setMenuOpen(false);
-                    }}
-                    className="rounded-full px-5 py-3 text-center font-semibold text-[#526158] transition-colors hover:bg-[#F0F6F1] hover:text-[#176B46] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#176B46]"
-                  >
-                    Sign out
-                  </button>
-                </>
-              ) : (
-                <>
-                  <Link
-                    to="/login"
-                    onClick={() => setMenuOpen(false)}
-                    className="mt-2 rounded-full border border-[#E5EEE7] px-5 py-3 text-center font-semibold text-[#526158] transition-colors hover:bg-[#F0F6F1] hover:text-[#176B46] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#176B46]"
-                  >
-                    Log in
-                  </Link>
-                  <Link
-                    to={user ? "/dashboard" : "/register"}
-                    onClick={() => setMenuOpen(false)}
-                    className="rounded-full bg-[#176B46] px-5 py-3 text-center font-semibold text-white shadow-md shadow-green-900/15 transition hover:bg-[#125637] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#176B46]"
-                  >
-                    Get started
-                  </Link>
-                </>
-              )}
-            </div>
+          <div className="flex flex-col gap-4 border-t border-green-100 bg-white px-6 py-5 md:hidden">
+            <a href="#home" onClick={() => setMenuOpen(false)}>Home</a>
+            <a href="#how-it-works" onClick={() => setMenuOpen(false)}>How it works</a>
+            <a href="#features" onClick={() => setMenuOpen(false)}>Features</a>
+            <a href="#impact" onClick={() => setMenuOpen(false)}>Our impact</a>
+            {user ? (
+              <>
+                <p className="text-sm text-gray-600">
+                  {user.name} · {roleLabel}
+                </p>
+                <Link
+                  to="/dashboard"
+                  onClick={() => setMenuOpen(false)}
+                  className="rounded-lg bg-[#176B46] px-5 py-3 text-center font-semibold text-white"
+                >
+                  Dashboard
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => {
+                    logout();
+                    setMenuOpen(false);
+                  }}
+                  className="rounded-lg px-5 py-3 text-center font-semibold hover:bg-green-50"
+                >
+                  Sign out
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  onClick={() => setMenuOpen(false)}
+                  className="rounded-lg px-5 py-3 text-center font-semibold hover:bg-green-50"
+                >
+                  Log in
+                </Link>
+                <Link
+                  to={user ? "/dashboard" : "/register"}
+                  onClick={() => setMenuOpen(false)}
+                  className="rounded-lg bg-[#176B46] px-5 py-3 text-center font-semibold text-white"
+                >
+                  Get started
+                </Link>
+              </>
+            )}
           </div>
         )}
       </nav>
