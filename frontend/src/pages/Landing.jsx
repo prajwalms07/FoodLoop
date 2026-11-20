@@ -47,7 +47,7 @@ function App() {
   }[user?.role] || "Member";
 
   return (
-   <div className="min-h-screen text-[#202B24]">
+    <div className="min-h-screen bg-[#F8FAF5] text-[#202B24]">
       {/* Navigation */}
       <nav className="sticky top-0 z-50 border-b border-green-100 bg-white/95 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
@@ -225,7 +225,7 @@ function App() {
               alt="Fresh, nutritious food ready to be shared"
               className="h-[440px] w-full object-cover sm:h-[540px]"
             />
-            <div className="absolute bottom-5 left-5 right-5 rounded-2xl border border-white/50 bg-[#E3F3E6]/95 p-5 shadow-xl backdrop-blur">
+            <div className="absolute bottom-5 left-5 right-5 rounded-2xl border border-white/50 bg-white/95 p-5 shadow-xl backdrop-blur">
               <div className="flex items-center justify-between gap-3">
                 <div>
                   <p className="text-sm font-medium text-gray-500">The FoodLoop mission</p>
@@ -241,7 +241,7 @@ function App() {
       </section>
 
       {/* Impact strip - illustrative until connected to backend */}
-      <section id="impact" className="border-y border-green-100 bg-[#DDF0E2]/80">
+      <section id="impact" className="border-y border-green-100 bg-white">
         <div className="mx-auto grid max-w-7xl gap-8 px-6 py-10 text-center sm:grid-cols-3">
           <div>
             <p className="text-3xl font-extrabold text-[#176B46]">Less waste</p>
@@ -276,7 +276,7 @@ function App() {
           ].map((step) => {
             const Icon = step.icon;
             return (
-              <div key={step.number}className="rounded-2xl border border-green-200 bg-[#E3F3E6] p-8 transition hover:-translate-y-1 hover:shadow-xl">
+              <div key={step.number} className="rounded-2xl border border-green-100 bg-white p-8 transition hover:-translate-y-1 hover:shadow-xl">
                 <div className="flex items-center justify-between">
                   <div className="rounded-xl bg-green-50 p-3 text-green-800"><Icon size={26} /></div>
                   <span className="text-3xl font-extrabold text-green-100">{step.number}</span>
@@ -290,7 +290,7 @@ function App() {
       </section>
 
       {/* Features */}
-      <section id="features" className="bg-[#EDF5EC]/70 py-24">
+      <section id="features" className="bg-[#EDF5EC] py-24">
         <div className="mx-auto max-w-7xl px-6">
           <div className="max-w-2xl">
             <p className="font-bold uppercase tracking-[0.18em] text-green-700">Built for collaboration</p>
@@ -305,7 +305,7 @@ function App() {
             {features.map((feature) => {
               const Icon = feature.icon;
               return (
-                <div key={feature.title} className="rounded-2xl bg-[#FFF3D6] p-8 shadow-sm">
+                <div key={feature.title} className="rounded-2xl bg-white p-8 shadow-sm">
                   <div className="inline-flex rounded-xl bg-green-100 p-3 text-green-800">
                     <Icon size={27} />
                   </div>

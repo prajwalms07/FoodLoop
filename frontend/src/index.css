@@ -9,16 +9,6 @@
 body {
   margin: 0;
   font-family: 'Inter', sans-serif;
-  background: #e7c995;
+  background: #F8FAF5;
   color: #202B24;
-}
-/* Translucent FoodLoop background image */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  background: url("./assets/foodloop-bg.jpg") center / cover no-repeat;
-  opacity: 0.37; /* 0 = invisible, 1 = fully solid. Adjust to taste */
-  pointer-events: none;
 }
